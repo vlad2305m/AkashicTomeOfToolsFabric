@@ -1,0 +1,9 @@
+{
+	"item.akashictomeoftools.akashic_tome": "Том Акаши",
+	"akashictome.tooltip_hint": "(Нажмите Shift)",
+	"akashictome.tooltip_count": "%d предметов внутри",
+	"text.autoconfig.akashic_tome.title": "Настройки (§bТом Акаши§r)",
+	"text.autoconfig.akashic_tome.option.hi": "Priorities (лень переводить)",
+	"text.autoconfig.akashic_tome.option.allowAkashicTome": "Том в томе!?",
+	"text.autoconfig.akashic_tome.option.bundleTooltip": "(Красивая) плашка с предметами"
+}

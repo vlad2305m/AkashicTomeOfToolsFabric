@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "akashictomeoftools",
+  "version": "${version}",
+  "name": "Akashic Tome Of Tools Fabric",
+  "description": "The book to end all books. (And/or tools.)",
+  "authors": ["Vazkii","MoreThanHidden","vlad2305m"],
+  "contact": {},
+  "license": "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License",
+  "icon": "assets/akashictomeoftools/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "vazkii.akashictomeoftools.AkashicTome"
+    ],
+    "modmenu": [
+      "vazkii.akashictomeoftools.config.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "akashictomeoftools.mixins.json"
+  ],
+  "depends": {
+    "cloth-config2": ">=5.0.0",
+    "fabricloader": ">=0.11.2",
+    "minecraft": "1.17.x"
+  },
+  "accessWidener" : "akashictomeoftools.accesswidener"
+}

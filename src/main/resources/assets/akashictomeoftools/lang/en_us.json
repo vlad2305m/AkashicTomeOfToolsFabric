@@ -1,0 +1,15 @@
+{
+	"item.akashictomeoftools.akashic_tome": "Akashic Tome",
+	"akashictome.tooltip_hint": "Press shift for more info",
+	"akashictome.tooltip_count": "%d items stored",
+	"text.autoconfig.akashic_tome.title": "Config (§bAkashic tome§r)",
+	"text.autoconfig.akashic_tome.option.hi": "Priorities",
+	"text.autoconfig.akashic_tome.option.bypassWhitelist": "Bypass whitelist",
+	"text.autoconfig.akashic_tome.option.requireUnstackable": "Require unstackable",
+	"text.autoconfig.akashic_tome.option.whitelistedItems": "Whitelisted id's",
+	"text.autoconfig.akashic_tome.option.whitelistedNames": "Whitelisted names",
+	"text.autoconfig.akashic_tome.option.blacklistedMods": "Blacklisted mods",
+	"text.autoconfig.akashic_tome.option.allowAkashicTome": "Allow tome nesting",
+	"text.autoconfig.akashic_tome.option.bundleTooltip": "Bundle tooltip",
+	"text.autoconfig.akashic_tome.option.blacklistedUseItems": "Use blacklist (regex)"
+}

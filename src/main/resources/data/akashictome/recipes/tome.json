@@ -5,11 +5,11 @@
       "item": "minecraft:book"
     },
     {
-      "tag": "forge:bookshelves"
+      "item": "minecraft:bookshelf"
     }
   ],
   "result": {
-    "item": "akashictome:tome",
+    "item": "akashictomeoftools:akashic_tome",
     "count": 1
   }
 } 
