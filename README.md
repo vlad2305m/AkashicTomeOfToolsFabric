@@ -1,6 +1,8 @@
 # AkashicTome
 The book of books. (and tools)
 
-[WIP] ported to 1.17 Fabric by vlad2305m
+Derivative of VazkiiMods:AkashicTome completely rewritten for 1.17 Fabric by vlad2305m
 
-This mod requires [AutoRegLib](https://github.com/Vazkii/AutoRegLib).
+Now you can use your tome as a morph-o-tool or any other multitool or multiarmour, because it is impossible to destroy it (unless you make it a water bucket and put it into a dispenser). (Or like a cool unconvenient bundle without capacity limit)
+
+This mod requires [AutoConfigUpdatedApi](https://www.curseforge.com/minecraft/mc-mods/auto-config-updated-api).
