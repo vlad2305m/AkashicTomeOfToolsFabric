@@ -2,5 +2,3 @@ accessWidener	v1	named
 extendable   class   net/minecraft/item/ItemStack
 accessible   method   net/minecraft/item/ItemStack   isEqual   (Lnet/minecraft/item/ItemStack;)Z
 extendable   method   net/minecraft/item/ItemStack   isEqual   (Lnet/minecraft/item/ItemStack;)Z
-accessible   field   net/minecraft/inventory/CraftingInventory stacks   Lnet/minecraft/util/collection/DefaultedList;
-accessible   field   net/minecraft/util/collection/DefaultedList delegate   Ljava/util/List;

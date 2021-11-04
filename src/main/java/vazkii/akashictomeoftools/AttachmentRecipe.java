@@ -19,20 +19,16 @@ public class AttachmentRecipe extends SpecialCraftingRecipe {
 	}
 
 	static private long lastCalledTime = 0;
-	static private List<ItemStack> ciCache = new ArrayList<>();
 	@Override
 	public boolean matches(CraftingInventory craftingInventory, World world) {
 		long dT = System.currentTimeMillis() - lastCalledTime;
 		lastCalledTime += dT;
-		List<ItemStack> cache2 = craftingInventory.stacks.delegate.stream().filter((i) -> !i.isEmpty()).toList();
-		if (!ciCache.equals(cache2)) {
-			ciCache = cache2;
-			if (dT < 20) return false;
-		}
+		if (dT < 20) return false;
 		boolean foundItem = false;
 		boolean foundTome = false;
 
 		ItemStack item = null;
+		ItemStack tome = null;
 		for(int j = 0; j < craftingInventory.size(); ++j) {
 			ItemStack itemStack = craftingInventory.getStack(j);
 			if (!itemStack.isEmpty()) {
@@ -43,7 +39,10 @@ public class AttachmentRecipe extends SpecialCraftingRecipe {
 						}
 						foundItem = true;
 						item = itemStack;
-					} else foundTome = true;
+					} else {
+						foundTome = true;
+						tome = itemStack;
+					}
 				} else if (!(itemStack instanceof ItemStackWrap)) {
 					if (!itemStack.isEmpty() && foundItem) {
 						return false;
@@ -54,9 +53,14 @@ public class AttachmentRecipe extends SpecialCraftingRecipe {
 			}
 		}
 
-		if (foundItem && foundTome) {
-			return checkItem(item);
+		if (foundItem && foundTome && checkItem(item)) {
+			if (tome instanceof ItemStackWrap) {
+				((ItemStackWrap) tome).addToTome(item);
+				item.setCount(0);
+			}
+			return true;
 		}
+
 
 		return false;
 	}
