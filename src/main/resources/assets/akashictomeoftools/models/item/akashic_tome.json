@@ -1,6 +1,6 @@
 {
-	"parent": "item/handheld",
+	"parent": "item/generated",
 	"textures": { 
-		"layer0": "akashictomeoftools:items/akashic_tome"
+		"layer0": "akashictomeoftools:item/akashic_tome"
 	}
 }
