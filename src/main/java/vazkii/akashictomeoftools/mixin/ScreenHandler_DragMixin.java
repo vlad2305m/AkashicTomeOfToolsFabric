@@ -25,9 +25,4 @@ public class ScreenHandler_DragMixin {
 
         return stack.copy();
     }
-
-    /*@Redirect(method = "canInsertItemIntoSlot(Lnet/minecraft/screen/slot/Slot;Lnet/minecraft/item/ItemStack;Z)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;canCombine(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Z"))
-    private static boolean canCombineReverse(ItemStack stack1, ItemStack stack2){
-        return ItemStack.canCombine(stack2, stack1);
-    }*/
 }

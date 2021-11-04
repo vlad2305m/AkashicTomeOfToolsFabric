@@ -1,7 +1,6 @@
 package vazkii.akashictomeoftools.client;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -61,26 +60,13 @@ public class TomeScreen extends Screen {
 	@Override
 	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		if (this.client == null) return;
-		//super.renderBackground(matrixStack);
 
-
-
-
-
-
-
-		//RenderSystem.colorMask(1F, 1F, 1F, 1F);
-		//RenderSystem.matrixMode(GL11.GL_PROJECTION);
-		//RenderSystem.pushMatrix();
-		//RenderSystem.loadIdentity();
 		int k = (int) this.client.getWindow().getScaleFactor();
 		RenderSystem.viewport((this.width - 320) / 2 * k, (this.height - 240) / 2 * k, 320 * k, 240 * k);
-		//Matrix4f matrix4f = Matrix4f.translate(-0.34F, 0.23F, 0.0F);
 		Matrix4f matrix4f = Matrix4f.translate(0F, -0.9F, 0.0F);
 		matrix4f.multiply(Matrix4f.viewboxMatrix(90.0D, 1.3333334F, 9.0F, 80.0F));
 		RenderSystem.backupProjectionMatrix();
 		RenderSystem.setProjectionMatrix(matrix4f);
-		//RenderSystem.matrixMode(GL11.GL_MODELVIEW);
 
 
 
@@ -110,7 +96,7 @@ public class TomeScreen extends Screen {
 
 		List<ItemStack> stacks = new ArrayList<>();
 
-		if (tome.hasNbt() && tome.getNbt().contains(ItemStackWrap.ITEMS_KEY)) {
+		if (tome.hasNbt() && Objects.requireNonNull(tome.getNbt()).contains(ItemStackWrap.ITEMS_KEY)) {
 			NbtCompound data = tome.getNbt();
 			NbtList nbtList = data.getList(ItemStackWrap.ITEMS_KEY, 10);
 
