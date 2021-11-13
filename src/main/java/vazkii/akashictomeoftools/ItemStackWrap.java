@@ -52,8 +52,8 @@ public class ItemStackWrap extends ItemStack {
     public static final String SELECTED_KEY = "SelectedPos";
     public static final String ACTUAL_TOME_KEY = "AkashicTome";
     public static final String DUMMY_KEY = "AkashicDummy";
-    public ItemStack content = null;
     public boolean notself = false;
+    private ItemStack content = null;
     private boolean tome = false;
 
     public ItemStackWrap(@SuppressWarnings("OptionalUsedAsFieldOrParameterType") Optional<NbtCompound> optionalNbtCompound) {
@@ -84,10 +84,12 @@ public class ItemStackWrap extends ItemStack {
     }
 
     public static ItemStack tryConvert(ItemStack stack){
-        if (!(stack instanceof ItemStackWrap)) {
+        if (!(stack instanceof ItemStackWrap tome)) {
             if (stack.isOf(AkashicTome.TOME_ITEM)) {
                 stack = new ItemStackWrap(Optional.of(stack.writeNbt(new NbtCompound())));
             }
+        } else {
+            if (tome.notself) tome.setContent(tryConvert(tome.getContent()));
         }
         return stack;
     }
@@ -146,7 +148,7 @@ public class ItemStackWrap extends ItemStack {
         prepareContent();
     }
 
-    private void removeSelectedStack() {
+    public void removeSelectedStack() {
         NbtCompound nbt = super.getNbt();
         if (nbt == null || !nbt.contains(ITEMS_KEY) || !nbt.contains(SELECTED_KEY)) return;
         int pos = nbt.getInt(SELECTED_KEY);
@@ -190,13 +192,26 @@ public class ItemStackWrap extends ItemStack {
             changeSelectedStack(-1);
         }
     }
+
     public void morph(int pos) {
         if (pos == -1) unmorph();
-        if (tome) ((ItemStackWrap) content).morph(pos);
+        else if (tome) ((ItemStackWrap) content).morph(pos);
         else {
             if (pos != -2)
              changeSelectedStack(pos);
         }
+    }
+
+    public boolean setContent(ItemStack stack) {
+        if (!notself) return false;
+        if (!tome || !((ItemStackWrap) content).setContent(stack)) content = stack;
+        return true;
+    }
+
+    public ItemStack getContent() {
+        if (!notself) return this;
+        if (tome) return ((ItemStackWrap) content).getContent();
+        else return content;
     }
 
     //below: modified methods ======================================================
@@ -204,9 +219,9 @@ public class ItemStackWrap extends ItemStack {
     public boolean detach = false;
     public ItemStack split(int amount) {
         if (amount <= 0) return ItemStack.EMPTY;
-        if (!notself || amount >= content.getCount()) {
-            if (detach && content != null) {
-                if (content instanceof ItemStackWrap) ((ItemStackWrap) content).detach = true;
+        if (!notself || amount >= getContent().getCount()) {
+            if (detach && notself && content != null) {
+                if (content instanceof ItemStackWrap wrap) wrap.detach = true;
                 ItemStack itemStack = this.content.split(amount);
                 detach = false;
                 updateEmpty();
@@ -217,9 +232,9 @@ public class ItemStackWrap extends ItemStack {
             super.decrement(1);
             return itemStack;
         }
-        ItemStack itemStack = content.copy();
+        ItemStack itemStack = getContent().copy();
         itemStack.setCount(amount);
-        content.decrement(amount);
+        getContent().decrement(amount);
         return itemStack;
     }
 
@@ -337,6 +352,15 @@ public class ItemStackWrap extends ItemStack {
         return Optional.empty();
     }
 
+    public ItemStack finishUsing(World world, LivingEntity user) {
+        if (notself) {
+            content = this.getItem().finishUsing(content, world, user);
+            updateEmpty();
+            return this;
+        }
+        return this.getItem().finishUsing(this, world, user);
+    }
+
     //lightly modified:
 
 
@@ -408,10 +432,6 @@ public class ItemStackWrap extends ItemStack {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (checkUseBlacklist()) return TypedActionResult.pass(user.getStackInHand(hand));
         return !notself ? super.use(world, user, hand) : content.use(world, user, hand);
-    }
-
-    public ItemStack finishUsing(World world, LivingEntity user) {
-        return this.getItem().finishUsing(this, world, user);
     }
 
     public int getMaxCount() {

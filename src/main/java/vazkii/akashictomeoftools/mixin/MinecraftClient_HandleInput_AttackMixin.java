@@ -21,16 +21,19 @@ import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 @Mixin(MinecraftClient.class)
-public class MinecraftClient_SwingHandMixin {
+public class MinecraftClient_HandleInput_AttackMixin {
 
     @Shadow @Nullable
     public ClientPlayerEntity player;
 
-    @Inject(method = "doAttack()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;swingHand(Lnet/minecraft/util/Hand;)V"))
+    @Inject(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doAttack()V"))
     public void checkMorph(CallbackInfo ci) {
         if (player == null || !player.isSneaking()) return;
         ItemStack stack = player.getMainHandStack();
-        if (!(stack instanceof ItemStackWrap)&&(!stack.hasNbt()||!Objects.requireNonNull(stack.getNbt()).contains("tag", 10)||!stack.getNbt().getCompound("tag").contains(ItemStackWrap.ACTUAL_TOME_KEY))) return;
+        if (!(stack instanceof ItemStackWrap)&&(!stack.hasNbt()||!Objects.requireNonNull(stack.getNbt()).contains("tag", 10)||!stack.getNbt().getCompound("tag").contains(ItemStackWrap.ACTUAL_TOME_KEY)))
+            stack = player.getOffHandStack();
+        if (!(stack instanceof ItemStackWrap)&&(!stack.hasNbt()||!Objects.requireNonNull(stack.getNbt()).contains("tag", 10)||!stack.getNbt().getCompound("tag").contains(ItemStackWrap.ACTUAL_TOME_KEY)))
+            return;
         ((ItemStackWrap) ItemStackWrap.tryConvert(stack)).unmorph();
         ClientPlayNetworking.send(AkashicTome.AkashicChannel, new PacketByteBuf(PacketByteBufs.create().writeInt(-1)));
     }

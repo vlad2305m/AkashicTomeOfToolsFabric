@@ -39,6 +39,7 @@ public class AkashicTome implements ModInitializer {
 			}
 			else {player.setStackInHand(Hand.MAIN_HAND, itemStack); hand = Hand.MAIN_HAND;}
 			int pos = buf.readInt();
+			itemStack = itemStack.copy();
 			if (pos != -2)
 			((ItemStackWrap) itemStack).morph(pos);
 			player.setStackInHand(hand, itemStack);

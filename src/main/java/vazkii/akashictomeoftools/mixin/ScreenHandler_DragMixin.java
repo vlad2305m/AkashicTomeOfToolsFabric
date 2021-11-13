@@ -12,16 +12,14 @@ import vazkii.akashictomeoftools.ItemStackWrap;
 public class ScreenHandler_DragMixin {
     @Redirect(method = "internalOnSlotClick(IILnet/minecraft/screen/slot/SlotActionType;Lnet/minecraft/entity/player/PlayerEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;copy()Lnet/minecraft/item/ItemStack;", ordinal = 1))
     private ItemStack untomeStack(ItemStack stack){
-        if (stack instanceof ItemStackWrap && ((ItemStackWrap)stack).notself)
-            return ((ItemStackWrap) stack).content.copy();
+        if (stack instanceof ItemStackWrap tome && ((ItemStackWrap)stack).notself) return tome.getContent().copy();
 
         return stack.copy();
     }
 
     @ModifyVariable(method = "internalOnSlotClick(IILnet/minecraft/screen/slot/SlotActionType;Lnet/minecraft/entity/player/PlayerEntity;)V", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/screen/ScreenHandler;getCursorStack()Lnet/minecraft/item/ItemStack;", ordinal = 4), ordinal = 1)
     private ItemStack untomeStack2(ItemStack stack){
-        if (stack instanceof ItemStackWrap && ((ItemStackWrap)stack).notself)
-            return ((ItemStackWrap) stack).content;
+        if (stack instanceof ItemStackWrap tome && tome.notself) return tome.getContent();
 
         return stack.copy();
     }

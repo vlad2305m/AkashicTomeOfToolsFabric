@@ -20,7 +20,6 @@ public class ItemStack_SubstitutionMixin {
 
     @Inject(method = "canCombine(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Z", at = @At(value = "HEAD"), cancellable = true)
     private static void combineMixin(ItemStack stackBase, ItemStack stack2, CallbackInfoReturnable<Boolean> cir) {
-        if (stackBase instanceof ItemStackWrap && ((ItemStackWrap) stackBase).notself) cir.setReturnValue(ItemStack.canCombine(((ItemStackWrap) stackBase).content, stack2));
+        if (stackBase instanceof ItemStackWrap tome && tome.notself) cir.setReturnValue(ItemStack.canCombine(((ItemStackWrap) stackBase).getContent(), stack2));
     }
-
 }

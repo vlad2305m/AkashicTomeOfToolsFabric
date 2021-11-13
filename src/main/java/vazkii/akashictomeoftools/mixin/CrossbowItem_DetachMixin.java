@@ -11,7 +11,7 @@ import vazkii.akashictomeoftools.ItemStackWrap;
 public class CrossbowItem_DetachMixin {
     @Redirect(method = "loadProjectile(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;ZZ)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;split(I)Lnet/minecraft/item/ItemStack;"))
     private static ItemStack detachArrow(ItemStack itemStack, int amount) {
-        if (itemStack instanceof ItemStackWrap && itemStack.getCount() == 1) ((ItemStackWrap) itemStack).detach = true;
+        if (itemStack instanceof ItemStackWrap tome && itemStack.getCount() == 1) tome.detach = true;
         return itemStack.split(amount);
     }
 }

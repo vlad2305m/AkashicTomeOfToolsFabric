@@ -14,7 +14,7 @@ public class AkashicTomeOfToolsConfig implements ConfigData {
             Filter priorities:
             !isTome > whiteID > unstackable > !blackMod > whiteName
             """)
-    public String hi = "Hi!";
+    public String hi = "";
 
     @Comment("Put a tome in a tome? Like folders?..")
     public boolean allowAkashicTome = false;

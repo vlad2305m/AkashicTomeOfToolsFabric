@@ -10,7 +10,9 @@ import net.minecraft.world.World;
 import vazkii.akashictomeoftools.config.AkashicTomeOfToolsConfig;
 import vazkii.akashictomeoftools.config.ConfigManager;
 
-import java.util.*;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class AttachmentRecipe extends SpecialCraftingRecipe {
@@ -19,10 +21,17 @@ public class AttachmentRecipe extends SpecialCraftingRecipe {
 	}
 
 	static private long lastCalledTime = 0;
+	static private long lastCalledTimeClient = 0;
 	@Override
 	public boolean matches(CraftingInventory craftingInventory, World world) {
-		long dT = System.currentTimeMillis() - lastCalledTime;
-		lastCalledTime += dT;
+		long dT;
+		if (world.isClient()) {
+			dT = System.currentTimeMillis() - lastCalledTimeClient;
+			lastCalledTimeClient += dT;
+		} else {
+			dT = System.currentTimeMillis() - lastCalledTime;
+			lastCalledTime += dT;
+		}
 		if (dT < 20) return false;
 		boolean foundItem = false;
 		boolean foundTome = false;
@@ -34,7 +43,7 @@ public class AttachmentRecipe extends SpecialCraftingRecipe {
 			if (!itemStack.isEmpty()) {
 				if (itemStack.isOf(AkashicTome.TOME_ITEM)) {
 					if (foundTome) {
-						if (!itemStack.isEmpty() && foundItem) {
+						if (foundItem) {
 							return false;
 						}
 						foundItem = true;
@@ -44,18 +53,18 @@ public class AttachmentRecipe extends SpecialCraftingRecipe {
 						tome = itemStack;
 					}
 				} else if (!(itemStack instanceof ItemStackWrap)) {
-					if (!itemStack.isEmpty() && foundItem) {
+					if (foundItem) {
 						return false;
 					}
 					foundItem = true;
 					item = itemStack;
-				}
+				} else return false;
 			}
 		}
 
 		if (foundItem && foundTome && checkItem(item)) {
-			if (tome instanceof ItemStackWrap) {
-				((ItemStackWrap) tome).addToTome(item);
+			if (tome instanceof ItemStackWrap wrap) {
+				wrap.addToTome(item);
 				item.setCount(0);
 			}
 			return true;
@@ -77,7 +86,7 @@ public class AttachmentRecipe extends SpecialCraftingRecipe {
 			if (!itemStack.isEmpty()) {
 				if (itemStack.isOf(AkashicTome.TOME_ITEM)) {
 					if (foundTome) {
-						if (!itemStack.isEmpty() && foundItem) {
+						if (foundItem) {
 							return ItemStack.EMPTY;
 						}
 						foundItem = true;
@@ -87,19 +96,18 @@ public class AttachmentRecipe extends SpecialCraftingRecipe {
 						tome = itemStack;
 					}
 				} else if (!(itemStack instanceof ItemStackWrap)) {
-					if (!itemStack.isEmpty() && foundItem) {
+					if (foundItem) {
 						return ItemStack.EMPTY;
 					}
 					foundItem = true;
 					item = itemStack;
-				}
+				} else return ItemStack.EMPTY;
 			}
 		}
 
 		ItemStack newTome;
-		if (tome instanceof ItemStackWrap) {
-			newTome = tome;
-			((ItemStackWrap) newTome).addToTome(item);
+		if (tome instanceof ItemStackWrap wrap) {
+			wrap.addToTome(item);
 			item.setCount(0);
 			newTome = ItemStack.EMPTY;
 		}
@@ -146,5 +154,6 @@ public class AttachmentRecipe extends SpecialCraftingRecipe {
 
 		return config.bypassWhitelist;
 	}
+
 
 }

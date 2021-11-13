@@ -17,13 +17,13 @@ public class PlayerInventory_InsertMixin {
 
     @Inject(method = "insertStack(ILnet/minecraft/item/ItemStack;)Z", at = @At("HEAD"))
     public void panic(int slot, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (stack instanceof ItemStackWrap) ((ItemStackWrap) stack).panic = true;
+        if (stack instanceof ItemStackWrap tome) tome.panic = true;
     }
 
     @Final @Shadow public PlayerEntity player;
     @Inject(method = "dropSelectedItem(Z)Lnet/minecraft/item/ItemStack;", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/player/PlayerInventory;getMainHandStack()Lnet/minecraft/item/ItemStack;"), locals = LocalCapture.CAPTURE_FAILHARD)
     public void detach(boolean entireStack, CallbackInfoReturnable<ItemStack> cir, ItemStack stack){
-        if (entireStack && stack instanceof ItemStackWrap && player.isSneaking()) ((ItemStackWrap) stack).detach = true;
+        if (entireStack && stack instanceof ItemStackWrap tome && player.isSneaking()) tome.detach = true;
     }
 
 }

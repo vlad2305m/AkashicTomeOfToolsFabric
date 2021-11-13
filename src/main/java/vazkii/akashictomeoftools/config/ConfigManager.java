@@ -5,11 +5,13 @@ import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ConfigManager {
     private static ConfigHolder<AkashicTomeOfToolsConfig> holder;
     public static final Consumer<AkashicTomeOfToolsConfig> DEFAULT = (i) -> {
+        i.hi = "Erase to reset";
         i.whitelistedNames = List.of(
                 "book.*",
                 ".*tome.*",
@@ -23,14 +25,7 @@ public class ConfigManager {
                 ".*codex.*",
                 ".*journal.*");
         i.blacklistedUseItems = List.of(
-                "item.minecraft..*_bucket",
-                "item.minecraft.potion",
-                "item.minecraft.writable_book",
-                "item.minecraft.beetroot_soup",
-                "item.minecraft.honey_bottle",
-                "item.minecraft.mushroom_stew",
-                "item.minecraft.rabbit_stew",
-                "item.minecraft.suspicious_stew");
+                "item.minecraft.I fixed them for you");
         i.whitelistedItems = List.of("item.minecraft.written_book");
         i.blacklistedMods = List.of();
     };
@@ -41,7 +36,7 @@ public class ConfigManager {
         }
 
         holder = AutoConfig.register(AkashicTomeOfToolsConfig.class, JanksonConfigSerializer::new);
-        if (holder.getConfig().whitelistedItems == null) DEFAULT.accept(holder.getConfig());
+        if (holder.getConfig().hi == null || Objects.equals(holder.getConfig().hi, "")) DEFAULT.accept(holder.getConfig());
         holder.save();
     }
 

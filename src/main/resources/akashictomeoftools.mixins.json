@@ -4,17 +4,24 @@
   "package": "vazkii.akashictomeoftools.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "AnvilScreenHandler_2ndSlotDecrementMixin",
     "ArmorItem_EquipMixin",
+    "BrewingStandBlockEntity_CraftKeepMixin",
+    "BucketItem_EmptyKeepMixin",
     "CraftingResultSlot_DetachMixin",
     "CrossbowItem_DetachMixin",
+    "DispenserBehaviorInner_KeepBucketMixin",
     "ElytraItem_EquipMixin",
+    "ItemFrameEntity_InsertMixin",
     "ItemStack_SubstitutionMixin",
+    "ItemUsage_ExchangeKeepMixin",
     "PacketByteBuf_ItemNetworkingMixin",
     "PlayerInventory_InsertMixin",
-    "ScreenHandler_DragMixin"
+    "ScreenHandler_DragMixin",
+    "ServerPlayNetworkHandler_KeepBookMixin"
   ],
   "client": [
-    "MinecraftClient_SwingHandMixin"
+    "MinecraftClient_HandleInput_AttackMixin"
   ],
   "injectors": {
     "defaultRequire": 1
