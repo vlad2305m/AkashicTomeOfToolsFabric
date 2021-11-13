@@ -17,7 +17,7 @@ public class AkashicTomeOfToolsConfig implements ConfigData {
     public String hi = "";
 
     @Comment("Put a tome in a tome? Like folders?..")
-    public boolean allowAkashicTome = false;
+    public boolean allowAkashicTome = true;
 
     @Comment("Whitelisted id's (regex)")
     public List<String> whitelistedItems = null;
