@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.8-SNAPSHOT'
+    id 'fabric-loom' version '0.10-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -7,11 +7,6 @@ repositories {
     mavenCentral()
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases" }
-    maven {
-        name = 'TerraformersMC Archive'
-        url = 'https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases/'
-        artifactUrls "https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases/"
-    }
 }
 
 sourceCompatibility = JavaVersion.VERSION_16

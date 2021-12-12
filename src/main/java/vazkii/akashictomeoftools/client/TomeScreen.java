@@ -24,6 +24,7 @@ import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
 import vazkii.akashictomeoftools.AkashicTome;
 import vazkii.akashictomeoftools.ItemStackWrap;
 @Environment(EnvType.CLIENT)
@@ -60,7 +61,7 @@ public class TomeScreen extends Screen {
 	@Override
 	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		if (this.client == null) return;
-
+		RenderSystem.disableDepthTest();
 		int k = (int) this.client.getWindow().getScaleFactor();
 		RenderSystem.viewport((this.width - 320) / 2 * k, (this.height - 240) / 2 * k, 320 * k, 240 * k);
 		Matrix4f matrix4f = Matrix4f.translate(0F, -0.9F, 0.0F);
@@ -72,8 +73,8 @@ public class TomeScreen extends Screen {
 
 		matrixStack.push();
 		MatrixStack.Entry matrixstack$entry = matrixStack.peek();
-		matrixstack$entry.getModel().loadIdentity();
-		matrixstack$entry.getNormal().loadIdentity();
+		matrixstack$entry.getPositionMatrix().loadIdentity();
+		matrixstack$entry.getNormalMatrix().loadIdentity();
 		matrixStack.translate(0.0D, 3.3F, 1984.0D);
 		float scale = 20F;
 		matrixStack.scale(scale, scale, scale);
@@ -151,8 +152,10 @@ public class TomeScreen extends Screen {
 			List<Text> tooltipList = tooltipStack.getTooltip(null, () -> false);
 			tooltipList.add(new LiteralText(mod));
 
+			RenderSystem.depthFunc(GL11.GL_ALWAYS);
 			this.renderTooltip(matrixStack, tooltipList, mouseX, mouseY);
 		}
+		matrixStack.push();
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 	}
 

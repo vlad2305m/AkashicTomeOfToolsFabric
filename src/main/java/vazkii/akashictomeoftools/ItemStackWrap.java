@@ -281,7 +281,7 @@ public class ItemStackWrap extends ItemStack {
             return EMPTY;
         } else {
             ItemStack itemStack = new ItemStackWrap(Optional.ofNullable(this.writeNbt(new NbtCompound())));
-            itemStack.setCooldown(this.getCooldown());
+            itemStack.setBobbingAnimationTime(this.getBobbingAnimationTime());
             if (panic) setSelectedSlot(-1);
             return itemStack;
         }
@@ -647,12 +647,12 @@ public class ItemStackWrap extends ItemStack {
         return !notself ? super.canPlaceOn(tagManager, pos) : content.canPlaceOn(tagManager, pos);
     }
 
-    public int getCooldown() {
-        return !notself ? super.getCooldown() : content.getCooldown();
+    public int getBobbingAnimationTime() {
+        return !notself ? super.getBobbingAnimationTime() : content.getBobbingAnimationTime();
     }
 
-    public void setCooldown(int cooldown) {
-        if (!notself) super.setCooldown(cooldown); else content.setCooldown(cooldown);
+    public void setBobbingAnimationTime(int cooldown) {
+        if (!notself) super.setBobbingAnimationTime(cooldown); else content.setBobbingAnimationTime(cooldown);
     }
 
     /**
