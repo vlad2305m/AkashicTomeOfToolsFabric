@@ -3,6 +3,7 @@ package vazkii.akashictomeoftools;
 import com.google.common.collect.Multimap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.MinecraftClient;
@@ -26,8 +27,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.tag.Tag;
-import net.minecraft.tag.TagManager;
+import net.minecraft.tag.TagKey;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -411,7 +411,7 @@ public class ItemStackWrap extends ItemStack {
         return !notself ? super.getItem() : content.getItem();
     }
 
-    public boolean isIn(Tag<Item> tag) {
+    public boolean isIn(TagKey<Item> tag) {
         return !notself ? super.isIn(tag) : content.isIn(tag);
     }
 
@@ -639,11 +639,11 @@ public class ItemStackWrap extends ItemStack {
         return !notself ? super.toHoverableText() : content.toHoverableText();
     }
 
-    public boolean canDestroy(TagManager tagManager, CachedBlockPosition pos) {
+    public boolean canDestroy(Registry<Block> tagManager, CachedBlockPosition pos) {
         return !notself ? super.canDestroy(tagManager, pos) : content.canDestroy(tagManager, pos);
     }
 
-    public boolean canPlaceOn(TagManager tagManager, CachedBlockPosition pos) {
+    public boolean canPlaceOn(Registry<Block> tagManager, CachedBlockPosition pos) {
         return !notself ? super.canPlaceOn(tagManager, pos) : content.canPlaceOn(tagManager, pos);
     }
 

@@ -51,7 +51,7 @@ public class TomeScreen extends Screen {
 			tome.morph(selectedItem);
 			ClientPlayNetworking.send(AkashicTome.AkashicChannel, new PacketByteBuf(PacketByteBufs.create().writeInt(selectedItem)));
 			player.setStackInHand(hand, tome);
-			super.onClose();
+			super.close();
 			return true;
 		}
 

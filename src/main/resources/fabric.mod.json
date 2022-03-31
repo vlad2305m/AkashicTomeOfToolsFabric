@@ -25,5 +25,5 @@
     "fabricloader": ">=0.11.2",
     "minecraft": "1.18.x"
   },
-  "accessWidenerPath" : "akashictomeoftools.accesswidener"
+  "accessWidener" : "akashictomeoftools.accesswidener"
 }

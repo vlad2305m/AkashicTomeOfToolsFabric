@@ -32,7 +32,7 @@ public class MinecraftClient_HandleInput_AttackMixin {
 
     private static long t = 0;
 
-    @Inject(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doAttack()V"))
+    @Inject(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doAttack()Z"))
     public void checkMorph(CallbackInfo ci) {
         if (crosshairTarget != null && crosshairTarget.getType() != HitResult.Type.MISS) {
             if (crosshairTarget.getType() == HitResult.Type.BLOCK && world != null
