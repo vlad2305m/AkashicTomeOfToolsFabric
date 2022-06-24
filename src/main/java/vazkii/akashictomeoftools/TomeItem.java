@@ -11,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -51,6 +50,6 @@ public class TomeItem extends Item {
 
 	@Override
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-		if (!(stack instanceof ItemStackWrap)) tooltip.add(new LiteralText("§l§c!!!BRICKED!!!"));
+		if (!(stack instanceof ItemStackWrap)) tooltip.add(Text.literal("§l§c!!!BRICKED!!!"));
 	}
 }

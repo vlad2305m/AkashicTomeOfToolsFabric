@@ -21,7 +21,9 @@
     "ServerPlayNetworkHandler_KeepBookMixin"
   ],
   "client": [
-    "MinecraftClient_HandleInput_AttackMixin"
+    "MinecraftClient_HandleInput_AttackMixin",
+    "MinecraftClient_HandleInput_AttackMixin$ClientPlayerInteractionManager_InstamineMixin",
+    "TooltipComponent_SubstitutionMixin"
   ],
   "injectors": {
     "defaultRequire": 1

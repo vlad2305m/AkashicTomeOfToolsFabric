@@ -30,7 +30,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.tag.TagKey;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -133,7 +132,9 @@ public class ItemStackWrap extends ItemStack {
 
             NbtCompound nbtCompound3 = new NbtCompound();
             stack.writeNbt(nbtCompound3);
+            if (ConfigManager.getConfig().addToFront)
             nbtList.add(0, nbtCompound3);
+            else nbtList.add(nbtCompound3);
         }
     }
 
@@ -306,7 +307,7 @@ public class ItemStackWrap extends ItemStack {
         List<Text> ls;
         if (notself) {
             ls = content.getTooltip(player, context);
-            Text WATERMARK = ((TranslatableText)AkashicTome.TOME_ITEM.getName()).formatted(Formatting.AQUA);
+            Text WATERMARK = ((MutableText)AkashicTome.TOME_ITEM.getName()).formatted(Formatting.AQUA);
             if (!WATERMARK.equals(ls.get(ls.size() - 1))) ls.add(WATERMARK);
         }
         else {
@@ -315,7 +316,7 @@ public class ItemStackWrap extends ItemStack {
             if (nbt == null || !nbt.contains(ITEMS_KEY) || !nbt.contains(SELECTED_KEY)) return ls;
             NbtList list = nbt.getList(ITEMS_KEY, 10);
             if (list.size() <=0) return ls;
-            ls.add(new TranslatableText("akashictome.tooltip_count", list.size()));
+            ls.add(Text.translatable("akashictome.tooltip_count", list.size()));
             if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
                 if (!ConfigManager.getConfig().bundleTooltip && InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
                     list.stream().map(NbtCompound.class::cast).forEach((tag) -> {
@@ -323,10 +324,10 @@ public class ItemStackWrap extends ItemStack {
                     });
                 }
                 else {
-                    ls.add(new TranslatableText("akashictome.tooltip_hint").formatted(Formatting.GRAY));
+                    ls.add(Text.translatable("akashictome.tooltip_hint").formatted(Formatting.GRAY));
                 }
             }
-            else ls.add(new TranslatableText("akashictome.tooltip_hint").formatted(Formatting.RED));
+            else ls.add(Text.translatable("akashictome.tooltip_hint").formatted(Formatting.RED));
         }
         return ls;
     }
@@ -345,7 +346,7 @@ public class ItemStackWrap extends ItemStack {
                     Objects.requireNonNull(defaultedList);
                     Objects.requireNonNull(NbtCompound.class);
                     stream.map(NbtCompound.class::cast).map(ItemStack::fromNbt).forEach(defaultedList::add);
-                    return Optional.of(new BundleTooltipData(defaultedList, 0));
+                    return Optional.of(new BundleTooltipData(defaultedList, 6));
                 }
             }
         }

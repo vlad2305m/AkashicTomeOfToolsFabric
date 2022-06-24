@@ -2,3 +2,12 @@ accessWidener	v1	named
 extendable   class   net/minecraft/item/ItemStack
 accessible   method   net/minecraft/item/ItemStack   isEqual   (Lnet/minecraft/item/ItemStack;)Z
 extendable   method   net/minecraft/item/ItemStack   isEqual   (Lnet/minecraft/item/ItemStack;)Z
+
+accessible   method   net/minecraft/client/gui/tooltip/BundleTooltipComponent   drawSlot   (IIIZLnet/minecraft/client/font/TextRenderer;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/item/ItemRenderer;I)V
+accessible   method   net/minecraft/client/gui/tooltip/BundleTooltipComponent   drawOutline   (IIIILnet/minecraft/client/util/math/MatrixStack;I)V
+accessible   field   net/minecraft/client/gui/tooltip/BundleTooltipComponent   inventory   Lnet/minecraft/util/collection/DefaultedList;
+accessible   field   net/minecraft/client/gui/tooltip/BundleTooltipComponent   occupancy   I
+accessible   method   net/minecraft/client/gui/tooltip/BundleTooltipComponent   getColumns   ()I
+extendable   method   net/minecraft/client/gui/tooltip/BundleTooltipComponent   getColumns   ()I
+accessible   method   net/minecraft/client/gui/tooltip/BundleTooltipComponent   getRows   ()I
+extendable   method   net/minecraft/client/gui/tooltip/BundleTooltipComponent   getRows   ()I

@@ -1,32 +1,44 @@
 package vazkii.akashictomeoftools.client;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.item.BundleTooltipData;
+import net.minecraft.client.item.TooltipData;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.model.BookModel;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.*;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import vazkii.akashictomeoftools.AkashicTome;
 import vazkii.akashictomeoftools.ItemStackWrap;
+import vazkii.akashictomeoftools.config.ConfigManager;
+
 @Environment(EnvType.CLIENT)
 public class TomeScreen extends Screen {
 
@@ -37,7 +49,7 @@ public class TomeScreen extends Screen {
 	final PlayerEntity player;
 
 	public TomeScreen(ItemStackWrap tome, Hand hand, PlayerEntity player) {
-		super(new LiteralText(""));
+		super(Text.literal(""));
 		this.tome = tome;
 		this.hand = hand;
 		this.player = player;
@@ -150,13 +162,32 @@ public class TomeScreen extends Screen {
 			String mod = "§7§o" + tempDefinedMod;
 
 			List<Text> tooltipList = tooltipStack.getTooltip(null, () -> false);
-			tooltipList.add(new LiteralText(mod));
-
+			tooltipList.add(Text.literal(mod));
+			Optional<TooltipData> tooltipData = tooltipStack.getTooltipData();
+			if (ConfigManager.getConfig().bundleTooltipShulkers && InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) && tooltipStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof ShulkerBoxBlock)
+				tooltipData = getShulkerTooltipData(tooltipStack);
 			RenderSystem.depthFunc(GL11.GL_ALWAYS);
-			this.renderTooltip(matrixStack, tooltipList, mouseX, mouseY);
+			this.renderTooltip(matrixStack, tooltipList, tooltipData, mouseX, mouseY);
 		}
 		matrixStack.push();
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
+	}
+
+	public Optional<TooltipData> getShulkerTooltipData(ItemStack tooltipStack) {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+				DefaultedList<ItemStack> defaultedList = DefaultedList.of();
+				defaultedList.add(ItemStack.EMPTY);
+				NbtCompound nbtCompound = tooltipStack.getNbt();
+				if (nbtCompound != null) {
+					NbtList nbtList = nbtCompound.getCompound("BlockEntityTag").getList("Items", 10);
+					Stream<NbtElement> stream = nbtList.stream();
+					Objects.requireNonNull(defaultedList);
+					Objects.requireNonNull(NbtCompound.class);
+					stream.map(NbtCompound.class::cast).map(ItemStack::fromNbt).forEach(defaultedList::add);
+					return Optional.of(new BundleTooltipData(defaultedList, 9));
+				}
+		}
+		return Optional.empty();
 	}
 
 	private void drawItem(ItemStack stack, int x, int y, String amountText) {

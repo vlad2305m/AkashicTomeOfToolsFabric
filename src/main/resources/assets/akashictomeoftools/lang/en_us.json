@@ -2,6 +2,7 @@
 	"item.akashictomeoftools.akashic_tome": "Akashic Tome",
 	"akashictome.tooltip_hint": "Press shift for more info",
 	"akashictome.tooltip_count": "%d items stored",
+	"akashictomeoftools.message_special_unmorph": "Face up to unmorph. Change AkashicTomeOT settings to hide or edit item list.",
 	"text.autoconfig.akashic_tome.title": "Config (§bAkashic tome§r)",
 	"text.autoconfig.akashic_tome.option.hi": "Priorities",
 	"text.autoconfig.akashic_tome.option.bypassWhitelist": "Bypass whitelist",
@@ -11,5 +12,9 @@
 	"text.autoconfig.akashic_tome.option.blacklistedMods": "Blacklisted mods",
 	"text.autoconfig.akashic_tome.option.allowAkashicTome": "Allow tome nesting",
 	"text.autoconfig.akashic_tome.option.bundleTooltip": "Bundle tooltip",
-	"text.autoconfig.akashic_tome.option.blacklistedUseItems": "Use blacklist (regex)"
+	"text.autoconfig.akashic_tome.option.bundleTooltipShulkers": "Shulker tooltip inside",
+	"text.autoconfig.akashic_tome.option.addToFront": "Add to front",
+	"text.autoconfig.akashic_tome.option.blacklistedUseItems": "Use blacklist (regex)",
+	"text.autoconfig.akashic_tome.option.blacklistedUnmorphItems": "Unmorph blacklist (regex)",
+	"text.autoconfig.akashic_tome.option.unmorphBlacklistMessage": "Show unmorph blacklist instructions"
 }

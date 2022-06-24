@@ -37,7 +37,19 @@ public class AkashicTomeOfToolsConfig implements ConfigData {
     @Comment("Use bundle-style tooltip instead")
     public boolean bundleTooltip = true;
 
+    @Comment("Use bundle-style tooltip for shulkers inside tome")
+    public boolean bundleTooltipShulkers = true;
+
+    @Comment("Add new items to front")
+    public boolean addToFront = true;
+
     @Comment("Blacklisted id's (Use method) (regex)")
     public List<String> blacklistedUseItems = null;
+
+    @Comment("Blacklisted id's (Unmorph) (regex)")
+    public List<String> blacklistedUnmorphItems = null;
+
+    @Comment("Blacklisted id's (Unmorph) (regex)")
+    public boolean unmorphBlacklistMessage = true;
 
 }

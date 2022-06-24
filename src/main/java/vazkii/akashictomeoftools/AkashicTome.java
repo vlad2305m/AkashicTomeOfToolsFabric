@@ -25,6 +25,9 @@ public class AkashicTome implements ModInitializer {
 	public static final RecipeType<AttachmentRecipe> ATTACHMENT_RECIPE_TYPE;
 	public static final RecipeSerializer<AttachmentRecipe> ATTACHMENT_RECIPE_SERIALIZER;
 
+	// Input timer
+	public static long t = 0;
+
 	@Override
 	public void onInitialize() {
 		ConfigManager.registerAutoConfig();

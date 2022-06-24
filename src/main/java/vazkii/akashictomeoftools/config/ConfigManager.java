@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 public class ConfigManager {
     private static ConfigHolder<AkashicTomeOfToolsConfig> holder;
     public static final Consumer<AkashicTomeOfToolsConfig> DEFAULT = (i) -> {
-        i.hi = "Erase to reset";
+        i.hi = "Erase to reset config";
         i.whitelistedNames = List.of(
                 "book.*",
                 ".*tome.*",
@@ -28,6 +28,7 @@ public class ConfigManager {
                 "item.minecraft.I fixed them for you");
         i.whitelistedItems = List.of("item.minecraft.written_book");
         i.blacklistedMods = List.of();
+        i.blacklistedUnmorphItems = List.of("item.minecraft.*_sword");
     };
 
     public static void registerAutoConfig() {
