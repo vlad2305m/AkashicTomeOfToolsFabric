@@ -2,12 +2,16 @@ package vazkii.akashictomeoftools.mixin;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import vazkii.akashictomeoftools.ItemStackWrap;
+
+import static vazkii.akashictomeoftools.AkashicTome.TOME_ITEM;
 
 @Mixin(PacketByteBuf.class)
 public class PacketByteBuf_ItemNetworkingMixin {
@@ -31,7 +35,13 @@ public class PacketByteBuf_ItemNetworkingMixin {
         }
         return nbtCompound;
     }
-
+    @ModifyArg(method = "writeItemStack(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/network/PacketByteBuf;", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/PacketByteBuf;writeRegistryValue(Lnet/minecraft/util/collection/IndexedIterable;Ljava/lang/Object;)V"), index = 1)
+    public <T> T spoofItem(T item) {
+        if (tome && nbt1 != null && item.equals(TOME_ITEM)) {
+            item = (T)Items.BOOK;
+        }
+        return item;
+    }
 
 
 

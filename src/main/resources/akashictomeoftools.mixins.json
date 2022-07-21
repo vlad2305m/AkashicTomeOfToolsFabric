@@ -17,6 +17,7 @@
     "ItemUsage_ExchangeKeepMixin",
     "PacketByteBuf_ItemNetworkingMixin",
     "PlayerInventory_InsertMixin",
+    "PlayrManagerHandshakeMixin",
     "ScreenHandler_DragMixin",
     "ServerPlayNetworkHandler_KeepBookMixin"
   ],
