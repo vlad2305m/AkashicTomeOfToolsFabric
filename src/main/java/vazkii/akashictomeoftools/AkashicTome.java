@@ -15,6 +15,8 @@ import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 import vazkii.akashictomeoftools.config.ConfigManager;
 
+import static vazkii.akashictomeoftools.ItemStackWrap.tryConvert;
+
 public class AkashicTome implements ModInitializer {
 
 	public static final Item TOME_ITEM = new TomeItem(new FabricItemSettings()
@@ -27,27 +29,36 @@ public class AkashicTome implements ModInitializer {
 
 	// Input timer
 	public static long t = 0;
+	public static final Object syncFlag = new Object();
 
 	@Override
 	public void onInitialize() {
 		ConfigManager.registerAutoConfig();
 		Registry.register(Registry.ITEM, new Identifier("akashictomeoftools", "akashic_tome"), TOME_ITEM);
 		ServerPlayNetworking.registerGlobalReceiver(AkashicChannel, (server, player, handler, buf, responseSender) -> {
-			ItemStack itemStack = ItemStackWrap.tryConvert(player.getMainHandStack());
-			Hand hand;
-			if (!(itemStack instanceof ItemStackWrap)) {
-				itemStack = ItemStackWrap.tryConvert(player.getOffHandStack());
-				if (!(itemStack instanceof ItemStackWrap)) return;
-				else {player.setStackInHand(Hand.OFF_HAND, itemStack);hand = Hand.OFF_HAND;}
+			synchronized (syncFlag) {
+				ItemStack itemStack = player.getMainHandStack();
+				Hand hand;
+				if (!check(itemStack)) {
+					itemStack = player.getOffHandStack();
+					if (!check(itemStack)) return;
+					else {
+						hand = Hand.OFF_HAND;
+					}
+				} else {
+					hand = Hand.MAIN_HAND;
+				}
+				if (!(itemStack instanceof ItemStackWrap)) itemStack = tryConvert(itemStack);
+				int pos = buf.readInt();
+				//itemStack = itemStack.copy();
+				if (pos > -2)
+					((ItemStackWrap) itemStack).morph(pos);
+				player.setStackInHand(hand, itemStack);
 			}
-			else {player.setStackInHand(Hand.MAIN_HAND, itemStack); hand = Hand.MAIN_HAND;}
-			int pos = buf.readInt();
-			itemStack = itemStack.copy();
-			if (pos != -2)
-			((ItemStackWrap) itemStack).morph(pos);
-			player.setStackInHand(hand, itemStack);
 		});
 	}
+
+	public static boolean check(ItemStack stack) { return stack instanceof ItemStackWrap || stack.isOf(TOME_ITEM); }
 
 	static {
 		ATTACHMENT_RECIPE_SERIALIZER = RecipeSerializer.register((new Identifier("akashictomeoftools", "add_page")).toString(), new SpecialRecipeSerializer<>(AttachmentRecipe::new));

@@ -13,7 +13,7 @@ import vazkii.akashictomeoftools.client.BetterBundleTooltipComponent;
 public interface TooltipComponent_SubstitutionMixin {
     @Inject(method = "of(Lnet/minecraft/client/item/TooltipData;)Lnet/minecraft/client/gui/tooltip/TooltipComponent;", cancellable = true, at = @At("HEAD"))
     private static void ofB(TooltipData data, CallbackInfoReturnable<TooltipComponent> cir) {
-        if (data instanceof BundleTooltipData bData && bData.getInventory().get(0).isEmpty())
+        if (data instanceof BundleTooltipData bData && !bData.getInventory().isEmpty() && bData.getInventory().get(0).isEmpty())
             cir.setReturnValue(new BetterBundleTooltipComponent(bData));
     }
 }

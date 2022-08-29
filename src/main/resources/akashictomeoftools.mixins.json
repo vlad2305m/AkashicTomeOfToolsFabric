@@ -3,6 +3,7 @@
   "minVersion": "0.8.2",
   "package": "vazkii.akashictomeoftools.mixin",
   "compatibilityLevel": "JAVA_16",
+  "plugin": "vazkii.akashictomeoftools.mixin.plugin.StackerModCompatPlugin",
   "mixins": [
     "AnvilScreenHandler_2ndSlotDecrementMixin",
     "ArmorItem_EquipMixin",

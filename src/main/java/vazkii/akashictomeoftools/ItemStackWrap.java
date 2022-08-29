@@ -52,6 +52,7 @@ public class ItemStackWrap extends ItemStack {
     public static final String ACTUAL_TOME_KEY = "AkashicTome";
     public static final String DUMMY_KEY = "AkashicDummy";
     public boolean notself = false;
+    private boolean nbtNotself = false;
     private ItemStack content = null;
     private boolean tome = false;
 
@@ -88,7 +89,7 @@ public class ItemStackWrap extends ItemStack {
                 stack = new ItemStackWrap(Optional.of(stack.writeNbt(new NbtCompound())));
             }
         } else {
-            if (tome.notself) tome.setContent(tryConvert(tome.getContent()));
+            if (tome.notself) { ItemStack test = tryConvert(tome.getContent()); if (test != tome.getContent()) tome.setContent(test);}
         }
         return stack;
     }
@@ -104,6 +105,7 @@ public class ItemStackWrap extends ItemStack {
                 setSelectedSlot(-1);
                 return;
             }
+            if (((NbtCompound)((NbtList) Objects.requireNonNull(nbt.get(ITEMS_KEY))).get(nbt.getInt(SELECTED_KEY))).contains(DUMMY_KEY)) {saveSelectedStack();}
             content = ItemStack.fromNbt((NbtCompound) nbtList.get(pos));
             notself = true;
             tome = content instanceof ItemStackWrap;
@@ -187,18 +189,18 @@ public class ItemStackWrap extends ItemStack {
         nbtList.set(pos, sel);
     }
 
-    public void unmorph() {
+    private void unmorph() {
         if (tome && ((ItemStackWrap) content).notself) ((ItemStackWrap) content).unmorph();
         else {
             changeSelectedStack(-1);
         }
     }
 
-    public void morph(int pos) {
+    public synchronized void morph(int pos) {
         if (pos == -1) unmorph();
         else if (tome) ((ItemStackWrap) content).morph(pos);
         else {
-            if (pos != -2)
+            if (pos > -2)
              changeSelectedStack(pos);
         }
     }
@@ -252,7 +254,7 @@ public class ItemStackWrap extends ItemStack {
      *
      * @param nbt the NBT compound to write to
      */
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public synchronized NbtCompound writeNbt(NbtCompound nbt) {
         if (!notself) return super.writeNbt(nbt);
 
         content.writeNbt(nbt);
@@ -260,9 +262,9 @@ public class ItemStackWrap extends ItemStack {
         NbtCompound nbt2 = nbt.getCompound("tag");
 
         dummySelectedStack();
-        notself = false;
+        nbtNotself = false;
         NbtCompound tomeNbt = super.writeNbt(new NbtCompound());
-        notself = true;
+        nbtNotself = true;
         if (!nbt2.contains(ACTUAL_TOME_KEY)) nbt2.put(ACTUAL_TOME_KEY, tomeNbt);
         else {
             NbtCompound nested = nbt2;
@@ -315,7 +317,7 @@ public class ItemStackWrap extends ItemStack {
             NbtCompound nbt = super.getNbt();
             if (nbt == null || !nbt.contains(ITEMS_KEY) || !nbt.contains(SELECTED_KEY)) return ls;
             NbtList list = nbt.getList(ITEMS_KEY, 10);
-            if (list.size() <=0) return ls;
+            if (list.size() == 0) return ls;
             ls.add(Text.translatable("akashictome.tooltip_count", list.size()));
             if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
                 if (!ConfigManager.getConfig().bundleTooltip && InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
@@ -409,7 +411,7 @@ public class ItemStackWrap extends ItemStack {
 
 
     public Item getItem() {
-        return !notself ? super.getItem() : content.getItem();
+        return (!notself || this.content == null || !nbtNotself) ? super.getItem() : content.getItem();
     }
 
     public boolean isIn(TagKey<Item> tag) {

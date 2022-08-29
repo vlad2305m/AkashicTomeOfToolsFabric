@@ -76,7 +76,7 @@ public abstract class MinecraftClient_HandleInput_AttackMixin {
                 }
             }
         }
-        ((ItemStackWrap) ItemStackWrap.tryConvert(stack)).unmorph();
+        ((ItemStackWrap) ItemStackWrap.tryConvert(stack)).morph(-1);
         ClientPlayNetworking.send(AkashicTome.AkashicChannel, new PacketByteBuf(PacketByteBufs.create().writeInt(-1)));
     }
 }
