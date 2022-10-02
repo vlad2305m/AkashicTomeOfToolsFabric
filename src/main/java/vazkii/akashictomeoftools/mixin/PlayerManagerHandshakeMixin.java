@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Mixin(PlayerManager.class)
-public class PlayrManagerHandshakeMixin {
+public class PlayerManagerHandshakeMixin {
     @ModifyArg(method = "onPlayerConnect(Lnet/minecraft/network/ClientConnection;Lnet/minecraft/server/network/ServerPlayerEntity;)V",at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/s2c/play/SynchronizeRecipesS2CPacket;<init>(Ljava/util/Collection;)V"))
     public Collection<Recipe<?>> removeAkashicRecipeSync(Collection<Recipe<?>> recipes){
         recipes = recipes.stream().filter((r) -> !(r instanceof AttachmentRecipe)).collect(Collectors.toSet());

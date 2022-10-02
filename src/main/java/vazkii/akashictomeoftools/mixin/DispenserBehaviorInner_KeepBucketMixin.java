@@ -11,7 +11,6 @@ import vazkii.akashictomeoftools.ItemStackWrap;
 
 @Mixin(targets = "net/minecraft/block/dispenser/DispenserBehavior$8")
 public class DispenserBehaviorInner_KeepBucketMixin {
-    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "dispenseSilently(Lnet/minecraft/util/math/BlockPointer;Lnet/minecraft/item/ItemStack;)Lnet/minecraft/item/ItemStack;", at = @At(value = "NEW", target = "net/minecraft/item/ItemStack", ordinal = 0), cancellable = true)
     public void getBucket(BlockPointer pointer, ItemStack stack, CallbackInfoReturnable<ItemStack> cir){
         if (stack instanceof ItemStackWrap tome && tome.notself) {
@@ -19,4 +18,5 @@ public class DispenserBehaviorInner_KeepBucketMixin {
             cir.setReturnValue(tome);
         }
     }
+
 }

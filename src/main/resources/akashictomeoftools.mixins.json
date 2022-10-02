@@ -3,9 +3,10 @@
   "minVersion": "0.8.2",
   "package": "vazkii.akashictomeoftools.mixin",
   "compatibilityLevel": "JAVA_16",
-  "plugin": "vazkii.akashictomeoftools.mixin.plugin.StackerModCompatPlugin",
+  "plugin": "vazkii.akashictomeoftools.mixin.plugin.ModCompatPlugin",
   "mixins": [
     "AnvilScreenHandler_2ndSlotDecrementMixin",
+    "AnvilScreenHandler_2ndSlotDecrementMixin$StackerAnvilScreenHandler_2ndSlotDecrementMixin",
     "ArmorItem_EquipMixin",
     "BrewingStandBlockEntity_CraftKeepMixin",
     "BucketItem_EmptyKeepMixin",
@@ -18,7 +19,7 @@
     "ItemUsage_ExchangeKeepMixin",
     "PacketByteBuf_ItemNetworkingMixin",
     "PlayerInventory_InsertMixin",
-    "PlayrManagerHandshakeMixin",
+    "PlayerManagerHandshakeMixin",
     "ScreenHandler_DragMixin",
     "ServerPlayNetworkHandler_KeepBookMixin"
   ],

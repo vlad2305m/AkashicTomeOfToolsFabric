@@ -26,7 +26,7 @@ public class ScreenHandler_DragMixin {
         return stack.copy();
     }
 
-    @ModifyArgs(method = "Lnet/minecraft/screen/ScreenHandler;insertItem(Lnet/minecraft/item/ItemStack;IIZ)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;canCombine(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Z"))
+    @ModifyArgs(method = "insertItem(Lnet/minecraft/item/ItemStack;IIZ)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;canCombine(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Z"))
     private void canCombineSwapForShiftItemTp(Args args) {
          ItemStack a = args.get(0);
          args.set(0, args.get(1));

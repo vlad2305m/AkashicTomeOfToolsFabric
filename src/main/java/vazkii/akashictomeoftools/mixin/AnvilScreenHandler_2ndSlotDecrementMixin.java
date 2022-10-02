@@ -6,15 +6,23 @@ import net.minecraft.screen.AnvilScreenHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import vazkii.akashictomeoftools.ItemStackWrap;
 
 @Mixin(AnvilScreenHandler.class)
 public class AnvilScreenHandler_2ndSlotDecrementMixin {
-    @Redirect(method = "onTakeOutput(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Inventory;setStack(ILnet/minecraft/item/ItemStack;)V"))
-    public void decrement(Inventory inventory, int slot, ItemStack stack) {
-        if (slot != 1 || stack != ItemStack.EMPTY) { inventory.setStack(slot, stack); return; }
-        ItemStack stack1 = inventory.getStack(slot);
-        if (!(stack1 instanceof ItemStackWrap tome) || !tome.notself) { inventory.setStack(slot, stack); return; }
-        ((ItemStackWrap)stack1).removeSelectedStack();
+
+    @Mixin(AnvilScreenHandler.class)
+    public static class StackerAnvilScreenHandler_2ndSlotDecrementMixin {
+        // Credit to @ZoeyTheEgoist for the original code behind this mixin and @Andrew6rant for Stacker mod
+        @Redirect(method = "onTakeOutput", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Inventory;setStack(ILnet/minecraft/item/ItemStack;)V", ordinal = 3))
+        private void setDecrementSlot1StackCountCpFromStackerToAkashic(Inventory inventory, int slot, ItemStack stack) {
+            ItemStack newStack = inventory.getStack(1);
+            newStack.decrement(1);
+            inventory.setStack(1, newStack);
+        }
     }
+    @Redirect(method = "onTakeOutput(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getCount()I"))
+    public int dontVoidSecondStackInAnvilAkashic(ItemStack instance) {
+       return Integer.MAX_VALUE;
+    }
+
 }
