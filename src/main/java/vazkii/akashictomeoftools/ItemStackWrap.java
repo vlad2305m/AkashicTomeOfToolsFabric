@@ -52,7 +52,7 @@ public class ItemStackWrap extends ItemStack {
     public static final String ACTUAL_TOME_KEY = "AkashicTome";
     public static final String DUMMY_KEY = "AkashicDummy";
     public boolean notself = false;
-    private boolean nbtNotself = false;
+    private boolean nbtNotself = true;
     private ItemStack content = null;
     private boolean tome = false;
 

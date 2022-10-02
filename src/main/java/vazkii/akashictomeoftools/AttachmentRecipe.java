@@ -66,10 +66,14 @@ public class AttachmentRecipe extends SpecialCraftingRecipe {
 			if (tome instanceof ItemStackWrap wrap) {
 				wrap.addToTome(item);
 				item.setCount(0);
+				return true;
 			}
-			return true;
+			return false;
 		}
 
+		if (foundTome && !foundItem){
+			return !(tome instanceof ItemStackWrap);
+		}
 
 		return false;
 	}
@@ -103,6 +107,10 @@ public class AttachmentRecipe extends SpecialCraftingRecipe {
 					item = itemStack;
 				} else return ItemStack.EMPTY;
 			}
+		}
+
+		if (foundTome && !foundItem && !(tome instanceof ItemStackWrap)){
+			return new ItemStackWrap(Optional.of(tome.writeNbt(new NbtCompound())));
 		}
 
 		ItemStack newTome;

@@ -41,7 +41,6 @@ public class ModCompatPlugin implements IMixinConfigPlugin {
         return null;
     }
 
-
     @SuppressWarnings("ConstantConditions")
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
