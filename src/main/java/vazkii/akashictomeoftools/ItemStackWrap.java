@@ -25,15 +25,16 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.tag.TagKey;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -322,7 +323,7 @@ public class ItemStackWrap extends ItemStack {
             if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
                 if (!ConfigManager.getConfig().bundleTooltip && InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
                     list.stream().map(NbtCompound.class::cast).forEach((tag) -> {
-                        if(tag.contains("id")) ls.add(((MutableText)Text.of(" - ")).append(Registry.ITEM.get(new Identifier(tag.getString("id"))).getName()));
+                        if(tag.contains("id")) ls.add(((MutableText)Text.of(" - ")).append(Registries.ITEM.get(new Identifier(tag.getString("id"))).getName()));
                     });
                 }
                 else {
@@ -389,13 +390,6 @@ public class ItemStackWrap extends ItemStack {
     @Nullable
     public Entity getHolder() {
         return super.getHolder();
-    }
-
-    public boolean isEqual(ItemStack stack) {
-        if (!(stack instanceof ItemStackWrap)) return false;
-        return !notself ? super.isEqual(stack) : content!=null && ((ItemStackWrap)stack).content!=null
-                && content.isEqual(((ItemStackWrap)stack).content);
-
     }
 
     public boolean panic = false;
@@ -499,14 +493,6 @@ public class ItemStackWrap extends ItemStack {
     public ActionResult useOnEntity(PlayerEntity user, LivingEntity entity, Hand hand) {
         if (checkUseBlacklist()) return ActionResult.PASS;
         return !notself ? super.useOnEntity(user, entity, hand) : content.useOnEntity(user, entity, hand);
-    }
-
-    public boolean isItemEqualIgnoreDamage(ItemStack stack) {
-        return !notself ? super.isItemEqualIgnoreDamage(stack) : content.isItemEqualIgnoreDamage(stack);
-    }
-
-    public boolean isItemEqual(ItemStack stack) {
-        return !notself ? super.isItemEqual(stack) : content.isItemEqual(stack);
     }
 
     public String getTranslationKey() {
@@ -701,11 +687,6 @@ public class ItemStackWrap extends ItemStack {
 
     public SoundEvent getEatSound() {
         return !notself ? super.getEatSound() : content.getEatSound();
-    }
-
-    @Nullable
-    public SoundEvent getEquipSound() {
-        return !notself ? super.getEquipSound() : content.getEquipSound();
     }
 
     public boolean checkUseBlacklist() {
