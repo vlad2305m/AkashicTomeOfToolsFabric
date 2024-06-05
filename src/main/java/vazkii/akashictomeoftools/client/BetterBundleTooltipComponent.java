@@ -1,6 +1,7 @@
 package vazkii.akashictomeoftools.client;
 
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.BundleTooltipComponent;
 import net.minecraft.client.item.BundleTooltipData;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -12,7 +13,7 @@ public class BetterBundleTooltipComponent extends BundleTooltipComponent {
     }
 
     @Override
-    public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer, int z) {
+    public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
         int columns = this.getColumns();
         int rows = this.getRows();
         int i = 1;
@@ -21,11 +22,11 @@ public class BetterBundleTooltipComponent extends BundleTooltipComponent {
             for(int m = 0; m < columns; ++m) {
                 int n = x + m * 18 + 1;
                 int o = y + l * 20 + 1;
-                this.drawSlot(n, o, i++, false, textRenderer, matrices, itemRenderer, z);
+                this.drawSlot(n, o, i++, false, context, textRenderer);
             }
         }
 
-        this.drawOutline(x, y, columns, rows, matrices, z);
+        this.drawOutline(x, y, columns, rows, context);
     }
 
     @Override

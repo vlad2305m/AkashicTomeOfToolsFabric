@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import vazkii.akashictomeoftools.ItemStackWrap;
 
 @Mixin(PlayerInventory.class)
-public class PlayerInventory_InsertMixin {
+public abstract class PlayerInventory_InsertMixin {
 
     @Inject(method = "insertStack(ILnet/minecraft/item/ItemStack;)Z", at = @At("HEAD"))
     public void panic(int slot, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
@@ -21,9 +21,12 @@ public class PlayerInventory_InsertMixin {
     }
 
     @Final @Shadow public PlayerEntity player;
+
+    @Shadow public abstract ItemStack getMainHandStack();
+
     @Inject(method = "dropSelectedItem(Z)Lnet/minecraft/item/ItemStack;", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/player/PlayerInventory;getMainHandStack()Lnet/minecraft/item/ItemStack;"), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void detach(boolean entireStack, CallbackInfoReturnable<ItemStack> cir, ItemStack stack){
-        if (entireStack && stack instanceof ItemStackWrap tome && player.isSneaking()) tome.detach = true;
+    public void detach(boolean entireStack, CallbackInfoReturnable<ItemStack> cir){
+        if (entireStack && getMainHandStack() instanceof ItemStackWrap tome && player.isSneaking()) tome.detach = true;
     }
 
 }

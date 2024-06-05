@@ -3,6 +3,7 @@ package vazkii.akashictomeoftools.client;
 import java.util.*;
 import java.util.stream.Stream;
 
+import com.mojang.blaze3d.systems.VertexSorter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -10,8 +11,10 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.BundleTooltipData;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.model.BookModel;
@@ -28,9 +31,10 @@ import net.minecraft.text.*;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
@@ -71,28 +75,27 @@ public class TomeScreen extends Screen {
 	}
 
 	@Override
-	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
 		if (this.client == null) return;
 		RenderSystem.disableDepthTest();
 		int k = (int) this.client.getWindow().getScaleFactor();
 		RenderSystem.viewport((this.width - 320) / 2 * k, (this.height - 240) / 2 * k, 320 * k, 240 * k);
-		Matrix4f matrix4f = Matrix4f.translate(0F, -0.9F, 0.0F);
-		matrix4f.multiply(Matrix4f.viewboxMatrix(90.0D, 1.3333334F, 9.0F, 80.0F));
+		Matrix4f matrix4f = new Matrix4f().translate(0F, -0.9F, 0.0F);
+		matrix4f.mul(new Matrix4f().perspective(90.0f, 1.3333334F, 9.0F, 80.0F));
 		RenderSystem.backupProjectionMatrix();
-		RenderSystem.setProjectionMatrix(matrix4f);
+		RenderSystem.setProjectionMatrix(matrix4f, VertexSorter.BY_Z);
 
-
-
+		MatrixStack matrixStack = context.getMatrices();
 		matrixStack.push();
 		MatrixStack.Entry matrixstack$entry = matrixStack.peek();
-		matrixstack$entry.getPositionMatrix().loadIdentity();
-		matrixstack$entry.getNormalMatrix().loadIdentity();
+		matrixstack$entry.getPositionMatrix().identity();
+		matrixstack$entry.getNormalMatrix().identity();
 		matrixStack.translate(0.0D, 3.3F, 1984.0D);
 		float scale = 20F;
 		matrixStack.scale(scale, scale, scale);
-		matrixStack.multiply(new Quaternion(Vec3f.POSITIVE_Z, 180.0F, true));
-		matrixStack.multiply(new Quaternion(Vec3f.POSITIVE_X, 50.0F, true));
-		matrixStack.multiply(new Quaternion(Vec3f.POSITIVE_Y, 4F * 90F - 90F, true));
+		matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
+		matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(50.0F));
+		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(4F * 90F - 90F));
 
 		BOOK_MODEL.setPageAngles(0.0F, 1F, 0F, 1F);
 		VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
@@ -134,8 +137,8 @@ public class TomeScreen extends Screen {
 
 		int padding = 4;
 		int extra = 2;
-		fill(matrixStack, startX - padding, startY - padding, startX + iconSize * amountPerRow + padding, startY + iconSize * rows + padding, 0x22000000);
-		fill(matrixStack, startX - padding - extra, startY - padding - extra, startX + iconSize * amountPerRow + padding + extra, startY + iconSize * rows + padding + extra, 0x22000000);
+		context.fill(startX - padding, startY - padding, startX + iconSize * amountPerRow + padding, startY + iconSize * rows + padding, 0x22000000);
+		context.fill(startX - padding - extra, startY - padding - extra, startX + iconSize * amountPerRow + padding + extra, startY + iconSize * rows + padding + extra, 0x22000000);
 
 
 		ItemStack tooltipStack = ItemStack.EMPTY;
@@ -153,7 +156,8 @@ public class TomeScreen extends Screen {
 					y -= 2;
 				}
 
-				drawItem(stack, x, y, String.valueOf(stack.getCount()));
+				context.drawItem(stack, x, y);
+				context.drawItemInSlot(textRenderer, stack, x, y, String.valueOf(stack.getCount()));
 			}
 		}
 
@@ -161,16 +165,28 @@ public class TomeScreen extends Screen {
 			String tempDefinedMod = new Identifier(tooltipStack.getItem().getTranslationKey()).getNamespace();
 			String mod = "§7§o" + tempDefinedMod;
 
-			List<Text> tooltipList = tooltipStack.getTooltip(null, () -> false);
+			List<Text> tooltipList = tooltipStack.getTooltip(null, new DummyTooltip());
 			tooltipList.add(Text.literal(mod));
 			Optional<TooltipData> tooltipData = tooltipStack.getTooltipData();
 			if (ConfigManager.getConfig().bundleTooltipShulkers && InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) && tooltipStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof ShulkerBoxBlock)
 				tooltipData = getShulkerTooltipData(tooltipStack);
 			RenderSystem.depthFunc(GL11.GL_ALWAYS);
-			this.renderTooltip(matrixStack, tooltipList, tooltipData, mouseX, mouseY);
+			context.drawTooltip(textRenderer, tooltipList, tooltipData, mouseX, mouseY);
 		}
 		matrixStack.push();
-		super.render(matrixStack, mouseX, mouseY, partialTicks);
+		super.render(context, mouseX, mouseY, partialTicks);
+	}
+
+	private class DummyTooltip implements TooltipContext {
+		@Override
+		public boolean isAdvanced() {
+			return false;
+		}
+
+		@Override
+		public boolean isCreative() {
+			return false;
+		}
 	}
 
 	public Optional<TooltipData> getShulkerTooltipData(ItemStack tooltipStack) {
@@ -189,15 +205,4 @@ public class TomeScreen extends Screen {
 		}
 		return Optional.empty();
 	}
-
-	private void drawItem(ItemStack stack, int x, int y, String amountText) {
-		this.setZOffset(-200);
-		this.itemRenderer.zOffset = -200.0F;
-		this.itemRenderer.renderInGuiWithOverrides(stack, x, y);
-		if (Objects.equals(amountText, "1")) amountText = "";
-		this.itemRenderer.renderGuiItemOverlay(this.textRenderer, stack, x, y, amountText);
-		this.setZOffset(0);
-		this.itemRenderer.zOffset = 0.0F;
-	}
-
 }

@@ -1,10 +1,12 @@
 package vazkii.akashictomeoftools;
 
-import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
+import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import vazkii.akashictomeoftools.config.AkashicTomeOfToolsConfig;
@@ -16,14 +18,15 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class AttachmentRecipe extends SpecialCraftingRecipe {
-	public AttachmentRecipe(Identifier identifier) {
-		super(identifier);
-	}
-
 	static private long lastCalledTime = 0;
 	static private long lastCalledTimeClient = 0;
+
+	public AttachmentRecipe(Identifier id, CraftingRecipeCategory category) {
+		super(id, category);
+	}
+
 	@Override
-	public boolean matches(CraftingInventory craftingInventory, World world) {
+	public boolean matches(RecipeInputInventory inventory, World world) {
 		long dT;
 		if (world.isClient()) {
 			dT = System.currentTimeMillis() - lastCalledTimeClient;
@@ -38,8 +41,8 @@ public class AttachmentRecipe extends SpecialCraftingRecipe {
 
 		ItemStack item = null;
 		ItemStack tome = null;
-		for(int j = 0; j < craftingInventory.size(); ++j) {
-			ItemStack itemStack = craftingInventory.getStack(j);
+		for(int j = 0; j < inventory.size(); ++j) {
+			ItemStack itemStack = inventory.getStack(j);
 			if (!itemStack.isEmpty()) {
 				if (itemStack.isOf(AkashicTome.TOME_ITEM)) {
 					if (foundTome) {
@@ -78,15 +81,16 @@ public class AttachmentRecipe extends SpecialCraftingRecipe {
 		return false;
 	}
 
-	public ItemStack craft(CraftingInventory craftingInventory) {
+	@Override
+	public ItemStack craft(RecipeInputInventory inventory, DynamicRegistryManager registryManager) {
 		ItemStack item = ItemStack.EMPTY;
 		ItemStack tome = ItemStack.EMPTY;
 
 		boolean foundItem = false;
 		boolean foundTome = false;
 
-		for(int j = 0; j < craftingInventory.size(); ++j) {
-			ItemStack itemStack = craftingInventory.getStack(j);
+		for(int j = 0; j < inventory.size(); ++j) {
+			ItemStack itemStack = inventory.getStack(j);
 			if (!itemStack.isEmpty()) {
 				if (itemStack.isOf(AkashicTome.TOME_ITEM)) {
 					if (foundTome) {
@@ -162,6 +166,4 @@ public class AttachmentRecipe extends SpecialCraftingRecipe {
 
 		return config.bypassWhitelist;
 	}
-
-
 }

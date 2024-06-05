@@ -4,15 +4,15 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.SpecialRecipeSerializer;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
-import net.minecraft.util.registry.Registry;
 import vazkii.akashictomeoftools.config.ConfigManager;
 
 import static vazkii.akashictomeoftools.ItemStackWrap.tryConvert;
@@ -20,7 +20,6 @@ import static vazkii.akashictomeoftools.ItemStackWrap.tryConvert;
 public class AkashicTome implements ModInitializer {
 
 	public static final Item TOME_ITEM = new TomeItem(new FabricItemSettings()
-			.group(ItemGroup.TOOLS)
 			.maxCount(1)
 			.rarity(Rarity.EPIC));
 	public static final Identifier AkashicChannel = new Identifier("akashictomeoftools");
@@ -34,7 +33,7 @@ public class AkashicTome implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ConfigManager.registerAutoConfig();
-		Registry.register(Registry.ITEM, new Identifier("akashictomeoftools", "akashic_tome"), TOME_ITEM);
+		Registry.register(Registries.ITEM, new Identifier("akashictomeoftools", "akashic_tome"), TOME_ITEM);
 		ServerPlayNetworking.registerGlobalReceiver(AkashicChannel, (server, player, handler, buf, responseSender) -> {
 			synchronized (syncFlag) {
 				ItemStack itemStack = player.getMainHandStack();
@@ -62,7 +61,7 @@ public class AkashicTome implements ModInitializer {
 
 	static {
 		ATTACHMENT_RECIPE_SERIALIZER = RecipeSerializer.register((new Identifier("akashictomeoftools", "add_page")).toString(), new SpecialRecipeSerializer<>(AttachmentRecipe::new));
-		ATTACHMENT_RECIPE_TYPE = Registry.register(Registry.RECIPE_TYPE, new Identifier("akashictomeoftools", "add_page"), new RecipeType<AttachmentRecipe>() {
+		ATTACHMENT_RECIPE_TYPE = Registry.register(Registries.RECIPE_TYPE, new Identifier("akashictomeoftools", "add_page"), new RecipeType<AttachmentRecipe>() {
 			@Override
 			public String toString() {return "akashictomeoftools:add_page";}
 		});
